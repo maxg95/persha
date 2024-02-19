@@ -1,0 +1,26 @@
+{{define "subject"}}Ларисо, на сайті залишений новий запит!{{end}}
+
+{{define "plainBody"}}
+Доброго дня, Ларисо!
+
+Клієнт залишив на сайті новий запит на дзвінок.
+
+Номер телефону клієнта: {{.Number}}
+Надіслано: {{now}}
+{{end}}
+
+{{define "htmlBody"}}
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <p>Доброго дня, Ларисо!</p>
+    <p>Клієнт залишив на сайті новий запит на дзвінок.</p>
+    <p>Номер телефону клієнта: {{.Number}}</p>
+    <p>Надіслано: {{now}}</p>
+  </body>
+</html>
+{{end}}

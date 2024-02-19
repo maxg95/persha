@@ -1,0 +1,69 @@
+{{define "partial:footer"}}
+<footer>
+    <div class="common-background">
+    <div class="contact-links">
+        <form id="requestForm" action='/' method='POST'>
+    <div>
+        <label>ЗВОРОТНІЙ ЗВ'ЯЗОК</label>
+        <input type='text' name='request' placeholder='Введіть ваш номер (без +38)'>
+    </div>
+    <div>
+        <input type='submit' value='Передзвоніть мені'>
+    </div>
+</form>
+
+<script>
+    document.getElementById('requestForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        fetch('/', {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(event.target)),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Дякуємо за запит, ми скоро вам перетелефонуємо!');
+                window.location.href = '/';
+            } else {
+                alert('Ви вказали неправильний номер!');
+                window.location.href = '/';
+            }
+        })
+        .catch(error => {
+            alert('Ви вказали неправильний номер!');
+            window.location.href = '/';
+        });
+    });
+</script>
+        <h2 class="footer-h2">Контакти</h2>
+        <p class="footer-p">+380662941140</p>
+        <h2 class="footer-h2">Ми відчинені</h2>
+        <p class="footer-p">З понеділка до неділі</p>
+        <p class="footer-p">З 10:00 до 20:00</p>
+        <h2 class="footer-h2">Адреса</h2>
+        <p class="footer-p">місто Луцьк, вулиця Рівненська, 54</p>
+
+    </div>
+    </div>
+
+    <div class="map-and-links">
+        <div class="map-container">
+            <img src='/static/img/map.jpeg' alt='Map' id="map-image" />
+        </div>
+        <br>
+        <p class="copyright-notice">&copy; {{now | formatTime "2006"}}</p>
+        <a href="pomynky" class="footer-link">К</a>
+        <a href="pomynalni_obidy" class="footer-link">А</a>
+        <a href="pomynalni_obidy_lutsk" class="footer-link">Ф</a>
+        <a href="vesillia" class="footer-link">Е</a>
+        <a href="vesillia_cafe" class="footer-link">П</a>
+        <a href="vesillia_lutsk" class="footer-link">Е</a>
+        <a href="keiterinh" class="footer-link">Р</a>
+        <a href="keiterinh_cafe" class="footer-link">Ш</a>
+        <a href="keiterinh_lutsk" class="footer-link">А</a>
+    </div>
+</footer>
+{{end}}
