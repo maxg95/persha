@@ -2,7 +2,7 @@
 
 ## Overview
 
-This README provides information about the Persha website, a Go-based backend serving as the foundation for a web service related to restaurant business. The application is designed to handle requests, insert data into a PostgreSQL database, send emails using SMTP, and is optimized for SEO. Additionally, it is secured with Let's Encrypt HTTPS and operates under the domain [https://persha.lutsk.ua](https://persha.lutsk.ua).
+This README provides information about the Persha website, a Go-based backend serving as the foundation for a web service related to restaurant business. The application is designed to handle requests, insert data into a PostgreSQL database, send emails using SMTP, and is optimized for SEO. Additionally, it is secured with Let's Encrypt HTTPS, redirects HTTP to HTTPS on server side and operates under the domain [https://persha.lutsk.ua](https://persha.lutsk.ua).
 
 ## Features
 
