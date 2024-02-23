@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"log/slog"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,7 +24,7 @@ func (app *application) serveHTTP() error {
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", app.config.httpPort),
 		Handler:      app.routes(),
-		ErrorLog:     slog.NewLogLogger(app.logger.Handler(), slog.LevelWarn),
+		ErrorLog:     log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile),
 		IdleTimeout:  defaultIdleTimeout,
 		ReadTimeout:  defaultReadTimeout,
 		WriteTimeout: defaultWriteTimeout,
@@ -54,7 +54,20 @@ func (app *application) serveHTTP() error {
 		shutdownErrorChan <- srv.Shutdown(ctx)
 	}()
 
-	app.logger.Info("starting server", slog.Group("server", "addr", srv.Addr))
+	// Redirect HTTP to HTTPS
+	go func() {
+		httpRedirect := &http.Server{
+			Addr:    ":80",
+			Handler: http.HandlerFunc(redirectHandler),
+		}
+
+		err := httpRedirect.ListenAndServe()
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Printf("HTTP to HTTPS redirect server error: %v\n", err)
+		}
+	}()
+
+	log.Printf("Starting server on %s\n", srv.Addr)
 
 	err := srv.ListenAndServeTLS(certFile, keyFile)
 	if !errors.Is(err, http.ErrServerClosed) {
@@ -66,8 +79,12 @@ func (app *application) serveHTTP() error {
 		return err
 	}
 
-	app.logger.Info("stopped server", slog.Group("server", "addr", srv.Addr))
+	log.Printf("Stopped server on %s\n", srv.Addr)
 
 	app.wg.Wait()
 	return nil
+}
+
+func redirectHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "https://persha.lutsk.ua"+r.URL.String(), http.StatusMovedPermanently)
 }
