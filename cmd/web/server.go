@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -29,6 +30,17 @@ func (app *application) serveHTTP() error {
 		WriteTimeout: defaultWriteTimeout,
 	}
 
+	certFile := "/etc/letsencrypt/live/persha.lutsk.ua/fullchain.pem"
+	keyFile := "/etc/letsencrypt/live/persha.lutsk.ua/privkey.pem"
+
+	tlsConfig := &tls.Config{
+		PreferServerCipherSuites: true,
+		MinVersion:               tls.VersionTLS12,
+		CurvePreferences:         []tls.CurveID{tls.CurveP521, tls.CurveP384, tls.CurveP256},
+	}
+
+	srv.TLSConfig = tlsConfig
+
 	shutdownErrorChan := make(chan error)
 
 	go func() {
@@ -44,7 +56,7 @@ func (app *application) serveHTTP() error {
 
 	app.logger.Info("starting server", slog.Group("server", "addr", srv.Addr))
 
-	err := srv.ListenAndServe()
+	err := srv.ListenAndServeTLS(certFile, keyFile)
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}

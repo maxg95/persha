@@ -1,0 +1,5 @@
+internal/funcs/
+internal/response/
+internal/validator/
+internal/version/
+run.sh
