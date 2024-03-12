@@ -3,4 +3,4 @@ build:
 	go build -o=/tmp/bin/web ./cmd/web
 	
 run: build
-	/tmp/bin/web
+	/tmp/bin/web/
